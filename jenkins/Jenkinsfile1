@@ -1,10 +1,27 @@
-pipeline {
-    agent { docker { image 'node:20.15.1-alpine3.20' } }
-    stages {
-       stage('build') {
-            steps {
-                sh 'node --version'
-            }
-        }
-    }
+node {
+	try {
+		stage('Checkout') {
+			checkout scm
+		}
+
+		stage('Build') {
+			echo 'Buidling...'
+		}
+
+		stage('Test') {
+			echo 'Testing...'
+		}
+
+		stage('Deploy') {
+			echo 'Deploying...'
+
+		}
+
+	} catch (Exception e){
+		currentBuild.result = 'Failure'
+		throw e
+
+	} finally {
+
+	}
 }
