@@ -1,36 +1,27 @@
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                catchError(buildResult: 'FAILURE', stageResult: 'SUCCESS') {
-                    sh "exit 1"
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-        }
-        }
-    }
+node {
+	try {
+		stage('Checkout') {
+			checkout scm
+		}
 
-    post {
-        always {
-            echo 'This will always run'
-        }
+		stage('Build') {
+			echo 'Buidling...'
+		}
 
-        success {
-            echo 'This will run only if the pipeline succeeds'
-        }
-        failure {
-            echo 'This will run only if the pipeline fails'
-        }
-    }
+		stage('Test') {
+			echo 'Testing...'
+		}
+
+		stage('Deploy') {
+			echo 'Deploying...'
+
+		}
+
+	} catch (Exception e){
+		currentBuild.result = 'Failure'
+		throw e
+
+	} finally {
+
+	}
 }
